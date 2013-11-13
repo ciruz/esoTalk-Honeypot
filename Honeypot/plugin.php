@@ -5,7 +5,7 @@ if (!defined("IN_ESOTALK")) exit;
 ET::$pluginInfo["Honeypot"] = array(
 	"name" => "Honeypot",
 	"description" => "Spam prevention with invisible form fields.",
-	"version" => "0.1",
+	"version" => "0.2",
 	"author" => "ciruz",
 	"authorEmail" => "me@ciruz.net",
 	"authorURL" => "http://www.ciruz.net",
@@ -79,7 +79,7 @@ class ETPlugin_Honeypot extends ETPlugin {
 				else {
 
 					if (C("esoTalk.registration.requireEmailConfirmation")) {
-						$sender->sendConfirmationEmail($data["email"], $data["username"], $memberId.$data["resetPassword"]);
+						$this->sendConfirmationEmail($data["email"], $data["username"], $memberId.$data["resetPassword"]);
 						$sender->renderMessage(T("Success!"), T("message.confirmEmail"));
 					}
 
@@ -98,5 +98,12 @@ class ETPlugin_Honeypot extends ETPlugin {
 
 		$sender->data("form", $form);
 		$sender->render($this->getResource("join.php"));
+	}
+	
+	protected function sendConfirmationEmail($email, $username, $hash){
+		sendEmail($email,
+			sprintf(T("email.confirmEmail.subject"), $username),
+			sprintf(T("email.header"), $username).sprintf(T("email.confirmEmail.body"), C("esoTalk.forumTitle"), URL("user/confirm/".$hash, true))
+		);
 	}
 }
