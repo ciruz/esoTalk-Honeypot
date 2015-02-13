@@ -26,7 +26,7 @@ class ETPlugin_Honeypot extends ETPlugin {
 	       	$sender->addToHead($js);
         }
 
-        // Hook into the join function to include the reCAPTCHA form.
+        // Hook into the join function to include the Honeypot form.
         public function handler_userController_initJoin($controller, $form)
         {
          	// Add the Honeypot section.
