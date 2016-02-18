@@ -5,7 +5,7 @@ if (!defined("IN_ESOTALK")) exit;
 ET::$pluginInfo["Honeypot"] = array(
 	"name" => "Honeypot",
 	"description" => "Spam prevention with invisible form fields.",
-	"version" => "1.0",
+	"version" => "1.1",
 	"author" => "ciruz",
 	"authorEmail" => "me@ciruz.net",
 	"authorURL" => "http://www.ciruz.net",
@@ -34,9 +34,6 @@ class ETPlugin_Honeypot extends ETPlugin {
 
          	// Add the Honeypot field.
         	$form->addField("honeypot", "honeypot", array($this, "renderHonepotField"), array($this, "processHoneypotField"));
-
-		// Need to fix redirecting here
-
 	}
 
         function renderHonepotField($form)
@@ -50,6 +47,9 @@ class ETPlugin_Honeypot extends ETPlugin {
         function processHoneypotField($form, $key, &$data)
         {
 		if($form->getValue('zipcode') != '' || ($form->getValue('phone') != ET::$session->get('securityHash')) || $form->getValue('homepage') != '')
-			return false;
+		{
+			// If one of these form fiels has a value redirect them back to the index
+			redirect("/");
+		}
         }
 }
